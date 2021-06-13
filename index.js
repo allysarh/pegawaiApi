@@ -3,7 +3,7 @@ const app = express()
 const PORT = 2090
 const bearerToken = require('express-bearer-token')
 const { db } = require('./config')
-const { pegawaiRouter } = require('./router')
+const { pegawaiRouter, jobtaskRouter } = require('./router')
 
 // konfig
 app.use(express.json())
@@ -22,6 +22,7 @@ app.get('/', (req, res)=>{
 
 // routing
 app.use('/pegawai', pegawaiRouter)
+app.use('/jobtask', jobtaskRouter)
 
 // handling error
 app.use((error, req, res, next) =>{

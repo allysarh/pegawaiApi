@@ -5,9 +5,19 @@ module.exports = {
         try {
             let pegawai = `SELECT idpegawai, fullname, email, password, role, status from biodata_pegawai b 
             JOIN status s on s.idstatus = b.idstatus
-            JOIN role r on r.idrole = b.idrole;`
-            console.log("pegawai", pegawai)
+            JOIN role r on r.idrole = b.idrole where b.idstatus = 1;`
+            let query = []
+            if(Object.keys(req.query).length> 0){
+                for(prop in req.query){
+                    query.push(`${prop} = ${db.escape(req.query[prop])}`)
+                }
 
+                pegawai = `SELECT idpegawai, fullname, email, role, status from biodata_pegawai b 
+                JOIN status s on s.idstatus = b.idstatus
+                JOIN role r on r.idrole = b.idrole where b.idstatus = 1 and ${query.join(" and ")};`
+
+                console.log(pegawai)
+            }
             pegawai = await dbQuery(pegawai)
 
             res.status(200).send(pegawai)
@@ -50,16 +60,33 @@ module.exports = {
             next(error)
         }
     },
-    addJob: async (req, res) =>{
+    deletePegawai:async(req, res, next) =>{
         try {
-            
+            console.log(req.user)
+            if(req.user.role === "Super Admin"){
+                let deletePegawai = `UPDATE biodata_pegawai set idstatus = 2 where idpegawai = ${req.params.idpegawai};`
+                deletePegawai = await dbQuery(deletePegawai)
+                res.status(200).send({status: "Berhasil delete", message: deletePegawai})
+            } else {
+                res.status(401).send("Anda tidak bisa menambahkan data. Hubungi super admin")
+            }
         } catch (error) {
             next(error)
         }
-    }, 
-    getJob: async ( req, res) =>{
+    },
+    updatePegawai: async (req, res, next) =>{
         try {
-            
+            if(req.user.role === "Super Admin"){
+                let updatePegawai = []
+                for (prop in req.body){
+                    updatePegawai.push(`Update biodata_pegawai set ${prop} = ${db.escape(req.body[prop])} where idpegawai = ${req.params.idpegawai};`)
+                }
+                console.log(updatePegawai.join(""))
+                updatePegawai = await dbQuery(updatePegawai.join(""))
+                res.status(200).send({status: 'Berhasil', message: updatePegawai}) 
+            } else {
+                res.status(401).send("Anda tidak bisa menambahkan data. Hubungi super admin")
+            }
         } catch (error) {
             next(error)
         }
