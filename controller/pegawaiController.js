@@ -28,7 +28,7 @@ module.exports = {
                     console.log(pegawai)
                 }
             } else if (req.user.role === "Guest") {
-                pegawai = `SELECT idpegawai, fullname, email, posisi, role, status from biodata_pegawai b 
+                pegawai = `SELECT idpegawai, fullname, email, posisi, role, telepon, status from biodata_pegawai b 
                 JOIN status s on s.idstatus = b.idstatus
                 JOIN posisi p on p.idposisi = b.idposisi
                 JOIN role r on r.idrole = p.idrole
@@ -45,7 +45,7 @@ module.exports = {
                         FROM posisi_path AS pp JOIN posisi AS p
                         ON pp.idposisi = p.parentId
                 )
-                SELECT idpegawai, b.idposisi, fullName, email, password, telepon, posisi FROM posisi_path pp  
+                SELECT idpegawai, b.idposisi, fullName, email, telepon, posisi FROM posisi_path pp  
                 JOIN biodata_pegawai b where b.idposisi = pp.idposisi
                 ORDER BY path;`
             }
