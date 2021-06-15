@@ -51,6 +51,20 @@ module.exports = {
             }
 
             pegawai = await dbQuery(pegawai)
+            console.log("pegawai", pegawai)
+
+            let getJobtask = `SELECT * from job_task;`
+            getJobtask = await dbQuery(getJobtask)
+            console.log("getJobtask", getJobtask)
+            pegawai.forEach(element => {
+                element.jobtask = []
+                getJobtask.forEach(item =>{
+                    if(item.idpegawai === element.idpegawai){
+                        element.jobtask.push(item)
+                    }
+                })
+            });
+
             res.status(200).send(pegawai)
         } catch (error) {
             console.log(error)
