@@ -6,7 +6,7 @@ module.exports = {
             console.log("user", req.user)
             let pegawai = ""
             if (req.user.role === "Super Admin") {
-                pegawai = `SELECT idpegawai, fullname, email, posisi, role, status from biodata_pegawai b 
+                pegawai = `SELECT idpegawai, fullname, email, posisi, role, telepon, status from biodata_pegawai b 
                 JOIN status s on s.idstatus = b.idstatus
                 JOIN posisi p on p.idposisi = b.idposisi
                 JOIN role r on r.idrole = p.idrole
@@ -17,7 +17,7 @@ module.exports = {
                         query.push(`${prop} = ${db.escape(req.query[prop])}`)
                     }
 
-                    pegawai = `SELECT idpegawai, fullname, email, posisi, role, status from biodata_pegawai b 
+                    pegawai = `SELECT idpegawai, fullname, email, posisi, role, telepon, status from biodata_pegawai b 
                     JOIN status s on s.idstatus = b.idstatus
                     JOIN posisi p on p.idposisi = b.idposisi
                     JOIN role r on r.idrole = p.idrole
@@ -53,9 +53,10 @@ module.exports = {
             pegawai = await dbQuery(pegawai)
             console.log("pegawai", pegawai)
 
+            // menambahkan jobtask
             let getJobtask = `SELECT * from job_task;`
             getJobtask = await dbQuery(getJobtask)
-            console.log("getJobtask", getJobtask)
+            
             pegawai.forEach(element => {
                 element.jobtask = []
                 getJobtask.forEach(item =>{
