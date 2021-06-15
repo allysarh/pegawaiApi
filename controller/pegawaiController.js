@@ -60,7 +60,7 @@ module.exports = {
                 element.jobtask = []
                 getJobtask.forEach(item =>{
                     if(item.idpegawai === element.idpegawai){
-                        element.jobtask.push(item)
+                        element.jobtask.push({jobtask: item.jobtask, deadline: item.deadline})
                     }
                 })
             });
